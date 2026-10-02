@@ -11,4 +11,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["sh", "-c", "uvicorn web:app --host 0.0.0.0 --port ${PORT:-8000}"]
+RUN mkdir -p web_output assets/temp assets/final assets/audio_clips
+
+CMD uvicorn web:app --host 0.0.0.0 --port $PORT
