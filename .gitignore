@@ -1,10 +1,37 @@
+# Environment
 .env
 .env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
 venv/
 .venv/
-__pycache__/
-*.pyc
-clips/
-assets/
-web_output/
+env/
+ENV/
 
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Project outputs (regenerate on each run)
+web_output/
+assets/temp/
+assets/final/
+assets/audio_clips/
+output/
+
+# Local clips (large, user downloads these)
+clips/
+
+# Logs
+*.log
