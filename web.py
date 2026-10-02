@@ -1,3 +1,5 @@
+import inspect  # noqa: I001
+import re
 import uuid
 
 from pathlib import Path
@@ -26,24 +28,31 @@ RECENT = []
 
 DEFAULT_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>'
 ICONS = {name: DEFAULT_ICON for name in COMMUNITY_PROFILES}
+MODEL_NAME = re.search(
+    r'model="([^"]+)"', inspect.getsource(ContentBrain.generate_script)
+).group(1)
+VOICE_NAME = AudioEngine().voice
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
-    try:
-        return templates.TemplateResponse(
-            request=request,
-            name="index.html",
-            context={"recent": RECENT},
-        )
-    except TypeError:
-        return templates.TemplateResponse(
-            "index.html",
-            {"request": request, "recent": RECENT},
-        )
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={
+            "communities": COMMUNITY_PROFILES,
+            "recent": RECENT,
+            "icons": ICONS,
+            "model_name": MODEL_NAME,
+            "voice_name": VOICE_NAME,
+        },
+    )
 
 
 @app.post("/generate")
-async def generate(topic: str = Form(...), community: str = Form(...)):
+async def generate(
+    topic: str = Form(...),
+    community: str = Form(...),
+):
     try:
         brain = ContentBrain()
         content = brain.generate_script(topic, community)
@@ -86,3 +95,20 @@ async def generate(topic: str = Form(...), community: str = Form(...)):
 @app.get("/health")
 def health():
     return {"ok": True}
+
+
+@app.delete("/videos/{video_id}")
+def delete_video(video_id: str):
+    if not re.fullmatch(r"[0-9a-fA-F]{8}", video_id):
+        return JSONResponse({"error": "Invalid video id."}, status_code=400)
+
+    item = next((entry for entry in RECENT if entry["id"] == video_id), None)
+    if item is None:
+        return JSONResponse({"error": "Video not found."}, status_code=404)
+
+    try:
+        (OUTPUT_DIR / f"{video_id}.mp4").unlink(missing_ok=True)
+        RECENT.remove(item)
+        return {"ok": True, "id": video_id}
+    except OSError as exc:
+        return JSONResponse({"error": str(exc)}, status_code=500)
