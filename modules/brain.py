@@ -48,10 +48,31 @@ COMMUNITY_PROFILES = {
 
 
 class ContentBrain:
-    def generate_script(self, topic, community):
+    def generate_script(self, topic, community, duration=30):
         community = community.strip().title()
         if community not in COMMUNITY_PROFILES:
             raise ValueError(f"Unknown community. Valid: {', '.join(COMMUNITY_PROFILES)}")
+
+        try:
+            duration = int(duration)
+        except (TypeError, ValueError):
+            duration = 30
+
+        if duration <= 15:
+            num_scenes = 3
+            word_target = "35-40"
+            max_words = 40
+            target_duration = 15
+        elif duration >= 45:
+            num_scenes = 7
+            word_target = "105-120"
+            max_words = 120
+            target_duration = 45
+        else:
+            num_scenes = 5
+            word_target = "70-80"
+            max_words = 80
+            target_duration = 30
 
         prompt = f"""You write short-form scripts for the Qoneqt {community} community.
 Topic: {topic.strip()}
@@ -70,7 +91,9 @@ Return ONLY one valid JSON object with exactly these keys:
   "hashtags": "#{community.lower()} #qoneqt #shorts"
 }}
 
-Make 3 to 7 scenes. Total narration 20-30 seconds. Match the {community} tone."""
+Target video duration: {target_duration} seconds. Produce exactly {num_scenes} scenes and ~{word_target} words total narration.
+Each scene's narration should be short — 1 sentence, max 15 words. Total narration must be under {max_words} words.
+Match the {community} tone."""
 
         client = _get_client()
         last_err = None
