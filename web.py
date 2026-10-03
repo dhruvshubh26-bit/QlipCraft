@@ -52,10 +52,11 @@ def home(request: Request):
 async def generate(
     topic: str = Form(...),
     community: str = Form(...),
+    duration: int = Form(30),
 ):
     try:
         brain = ContentBrain()
-        content = brain.generate_script(topic, community)
+        content = brain.generate_script(topic, community, duration)
         scenes = content.get("script", [])
         full_text = " ".join(s.get("narration", "") for s in scenes if isinstance(s, dict))
 

@@ -6,48 +6,452 @@
   <title>QlipCraft Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 <div class="app-shell">
+  <!-- SIDEBAR (240px) -->
   <aside class="sidebar">
-    <a class="brand" href="#create" data-view-target="create"><span class="brand-mark">Q</span><span><strong>QlipCraft</strong><small>STUDIO</small></span></a>
-    <nav class="sidebar-nav" aria-label="Studio navigation">
-      <button class="nav-item active" type="button" data-view-target="create"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Create Video</button>
-      <button class="nav-item" type="button" data-view-target="videos"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m10 9 5 3-5 3V9Z"/></svg>My Videos <span class="count" id="video-count">{{ recent|length }}</span></button>
+    <div class="brand">
+      <div class="brand-mark brand-icon">Q</div>
+      <div class="brand-text">
+        <span class="brand-name">QlipCraft</span>
+        <span class="brand-sub">STUDIO</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Main Navigation">
+      <button type="button" class="nav-item nav-btn active" data-view-target="create" title="Create Video">
+        <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <line x1="12" y1="8" x2="12" y2="16"/>
+          <line x1="8" y1="12" x2="16" y2="12"/>
+        </svg>
+        <span class="nav-text">Create Video</span>
+      </button>
+
+      <button type="button" class="nav-item nav-btn" data-view-target="hub" title="Generation Hub">
+        <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        <span class="nav-text">Generation Hub</span>
+      </button>
+
+      <button type="button" class="nav-item nav-btn" data-view-target="videos" title="My Videos">
+        <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/>
+          <line x1="7" y1="2" x2="7" y2="22"/>
+          <line x1="17" y1="2" x2="17" y2="22"/>
+          <line x1="2" y1="12" x2="22" y2="12"/>
+          <line x1="2" y1="7" x2="7" y2="7"/>
+          <line x1="2" y1="17" x2="7" y2="17"/>
+          <line x1="17" y1="17" x2="22" y2="17"/>
+          <line x1="17" y1="7" x2="22" y2="7"/>
+        </svg>
+        <span class="nav-text">My Videos</span>
+        <span class="nav-badge" id="video-count">{{ recent|length }}</span>
+      </button>
+
+      <button type="button" class="nav-item nav-btn" data-view-target="review" title="Video Review">
+        <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <span class="nav-text">Video Review</span>
+      </button>
+
+      <button type="button" class="nav-item nav-btn" data-view-target="drafts" title="Drafts">
+        <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        <span class="nav-text">Drafts</span>
+      </button>
+
+      <button type="button" class="nav-item nav-btn" data-view-target="history" title="Publishing History">
+        <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span class="nav-text">Publishing History</span>
+      </button>
+
+      <button type="button" class="nav-item nav-btn" data-view-target="settings" title="Settings">
+        <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        <span class="nav-text">Settings</span>
+      </button>
     </nav>
-    <div class="sidebar-user"><span class="user-avatar">D</span><span><strong>Dhruv</strong><small>Pro Creator</small></span></div>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">D</div>
+      <div class="user-info">
+        <span class="user-name">Dhruv</span>
+        <span class="user-role">Pro Creator</span>
+      </div>
+    </div>
   </aside>
 
-  <main class="main-panel">
+  <!-- MAIN PANEL -->
+  <div class="main-panel">
+    <!-- TOPBAR (60px) -->
     <header class="topbar">
-      <div><strong>Video Studio</strong><small>Groq {{ model_name }} · Edge TTS · FFmpeg</small></div>
-      <button class="new-video" type="button" data-view-target="create"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New Video</button>
+      <div class="topbar-left">
+        <h2 class="topbar-title">Production Hub</h2>
+        <span class="topbar-sub">Powered by Groq {{ model_name }} · Edge TTS · FFmpeg</span>
+      </div>
+      <div class="topbar-right">
+        <span class="credits-chip">⚡ 120 Credits</span>
+        <button type="button" class="btn-new-video" data-view-target="create">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          <span>New Video</span>
+        </button>
+      </div>
     </header>
 
-    <div class="views">
+    <!-- MAIN CONTENT AREA -->
+    <main class="views">
+      <!-- VIEW 1: Create Video -->
       <section class="view active" id="view-create">
-        <div class="view-header"><span class="eyebrow">CREATIVE WORKSPACE</span><h1>Transform any idea into a 9:16 short.</h1><p>Drafted by Groq {{ model_name }}, voiced with {{ voice_name }}, and assembled from your local clips library.</p></div>
+        <div class="view-header">
+          <span class="eyebrow">CREATIVE WORKSPACE</span>
+          <h1>Transform any idea into a 9:16 short.</h1>
+          <p class="view-sub">Powered by {{ model_name }} · {{ voice_name }} · FFmpeg</p>
+        </div>
+
         <div class="studio-form">
-          <label class="field-label" for="topic-input">VIDEO TOPIC / CORE SUBJECT</label>
-          <textarea id="topic-input" class="topic-input" placeholder="e.g. 3 practical Python tips every beginner should know..."></textarea>
-          <div class="presets"><span>START WITH A PRESET</span><button type="button" class="preset" data-preset="3 secret git commands that save 10 hours a week">Git shortcuts that save hours</button><button type="button" class="preset" data-preset="Why SQLite is taking over production backends">Why SQLite is winning production</button><button type="button" class="preset" data-preset="5-minute pasta recipe for busy weeknights">A five-minute pasta recipe</button></div>
-          <label class="field-label">TARGET COMMUNITY</label>
-          <div class="community-grid">{% for name in communities %}<button class="community-option{% if loop.first %} active{% endif %}" type="button" data-community="{{ name }}">{{ name }}</button>{% endfor %}</div>
-          <button class="primary-button" id="generate-button" type="button"><svg viewBox="0 0 24 24"><path d="m12 3 1.4 5.6L19 10l-5.6 1.4L12 17l-1.4-5.6L5 10l5.6-1.4L12 3Z"/></svg>Generate Video</button>
+          <div class="field-group">
+            <label class="field-label" for="topicInput">VIDEO TOPIC</label>
+            <textarea id="topicInput" class="textarea topic-input" placeholder="e.g. 5-minute pasta recipe for busy weeknights"></textarea>
+            <div id="topicError" class="field-error" style="display: none;"></div>
+            <div class="presets-row presets">
+              <button type="button" class="preset preset-btn" data-preset="3 secret git commands that save 10 hours a week">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3Z"/></svg>
+                <span>3 secret git commands that save 10 hours a week</span>
+              </button>
+              <button type="button" class="preset preset-btn" data-preset="Why SQLite is taking over production backends in 2026">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3Z"/></svg>
+                <span>Why SQLite is taking over production backends in 2026</span>
+              </button>
+              <button type="button" class="preset preset-btn" data-preset="5-minute pasta recipe for busy weeknights">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3Z"/></svg>
+                <span>5-minute pasta recipe for busy weeknights</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">TARGET COMMUNITY</label>
+            <div class="community-grid">
+              {% for name in communities %}
+              <button type="button" class="community community-btn{% if loop.first %} active{% endif %}" data-community="{{ name }}">{{ name }}</button>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">TARGET DURATION</label>
+            <div class="duration-grid">
+              <button type="button" class="option duration-btn" data-duration="15">15 Seconds / 3 scenes</button>
+              <button type="button" class="option duration-btn active" data-duration="30">30 Seconds / 5 scenes</button>
+              <button type="button" class="option duration-btn" data-duration="45">45 Seconds / 7 scenes</button>
+            </div>
+          </div>
+
+          <button type="button" class="btn-primary primary-button generate-btn" id="generateButton">
+            <svg class="generate-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m12 3 1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3Z"/>
+            </svg>
+            <span class="generate-text">Generate Video</span>
+          </button>
         </div>
       </section>
 
-      <section class="view" id="view-videos">
-        <div class="view-header"><span class="eyebrow">LIBRARY</span><h1>My Videos</h1><p>Your latest completed productions.</p></div>
-        <div class="video-grid">{% if recent %}{% for item in recent %}<article class="video-card"><video src="{{ url_for('output', path=item.id ~ '.mp4') }}" preload="metadata" muted controls></video><div class="video-info"><strong>{{ item.topic }}</strong><small>{{ item.community }} · just now</small><button class="delete-video" type="button" data-video-id="{{ item.id }}">Delete</button></div></article>{% endfor %}{% else %}<div class="empty-state"><span>◌</span><strong>No videos yet</strong><p>Generate your first production from Create Video.</p></div>{% endif %}</div>
+      <!-- VIEW 2: Generation Hub -->
+      <section class="view" id="view-hub">
+        <div class="view-header">
+          <span class="eyebrow">LIVE EXECUTION</span>
+          <h1>Generation Hub</h1>
+          <p class="view-sub">Telemetry and stage pipeline monitoring.</p>
+        </div>
+
+        <div class="hub-summary-card">
+          <div class="summary-col summary-topic-col">
+            <span class="summary-label">TOPIC</span>
+            <span class="summary-val" id="hubTopic">No active job</span>
+          </div>
+          <div class="summary-col">
+            <span class="summary-label">COMMUNITY</span>
+            <span class="summary-val" id="hubCommunity">Jobs</span>
+          </div>
+          <div class="summary-col">
+            <span class="summary-label">DURATION</span>
+            <span class="summary-val" id="hubDuration">30s</span>
+          </div>
+          <div class="summary-col">
+            <span class="summary-label">STATUS</span>
+            <span class="summary-status" id="hubStatusBadge">Standby</span>
+          </div>
+        </div>
+
+        <div class="progress-container">
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="hubProgressBar" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="pipeline-card">
+          <div class="pipeline-step idle" id="step-1" data-step="1">
+            <div class="step-icon">
+              <span class="step-num">1</span>
+            </div>
+            <div class="step-body">
+              <div class="step-title">Script &amp; Hook Generation</div>
+              <div class="step-desc">LLM produces community-tuned script (openai/gpt-oss-120b)</div>
+            </div>
+            <div class="step-time" id="step-time-1">—</div>
+          </div>
+
+          <div class="pipeline-step idle" id="step-2" data-step="2">
+            <div class="step-icon">
+              <span class="step-num">2</span>
+            </div>
+            <div class="step-body">
+              <div class="step-title">Voiceover Synthesis</div>
+              <div class="step-desc">Edge TTS generates AI voiceover (en-US-AriaNeural)</div>
+            </div>
+            <div class="step-time" id="step-time-2">—</div>
+          </div>
+
+          <div class="pipeline-step idle" id="step-3" data-step="3">
+            <div class="step-icon">
+              <span class="step-num">3</span>
+            </div>
+            <div class="step-body">
+              <div class="step-title">Visual Asset Selection</div>
+              <div class="step-desc">Community-matched clips from local library</div>
+            </div>
+            <div class="step-time" id="step-time-3">—</div>
+          </div>
+
+          <div class="pipeline-step idle" id="step-4" data-step="4">
+            <div class="step-icon">
+              <span class="step-num">4</span>
+            </div>
+            <div class="step-body">
+              <div class="step-title">Video Assembly</div>
+              <div class="step-desc">FFmpeg composes 9:16 vertical video</div>
+            </div>
+            <div class="step-time" id="step-time-4">—</div>
+          </div>
+
+          <div class="pipeline-step idle" id="step-5" data-step="5">
+            <div class="step-icon">
+              <span class="step-num">5</span>
+            </div>
+            <div class="step-body">
+              <div class="step-title">Quality Validation</div>
+              <div class="step-desc">Checks duration, resolution, and audio sync</div>
+            </div>
+            <div class="step-time" id="step-time-5">—</div>
+          </div>
+
+          <div class="pipeline-step idle" id="step-6" data-step="6">
+            <div class="step-icon">
+              <span class="step-num">6</span>
+            </div>
+            <div class="step-body">
+              <div class="step-title">Publishing Package</div>
+              <div class="step-desc">Caption, hashtags, and hooks ready for Qoneqt</div>
+            </div>
+            <div class="step-time" id="step-time-6">—</div>
+          </div>
+        </div>
+
+        <div id="hubError" class="hub-error-banner" style="display: none;"></div>
       </section>
-    </div>
-  </main>
+
+      <!-- VIEW 3: My Videos -->
+      <section class="view" id="view-videos">
+        <div class="view-header">
+          <span class="eyebrow">LIBRARY</span>
+          <h1>My Videos</h1>
+          <p class="view-sub">Completed vertical short productions.</p>
+        </div>
+
+        <div class="video-grid" id="videoGrid">
+          {% if recent %}
+            {% for item in recent %}
+            <article class="video-card" data-id="{{ item.id }}" data-topic="{{ item.topic }}" data-community="{{ item.community }}" data-caption="{{ item.caption }}" data-hashtags="{{ item.hashtags }}" tabindex="0" role="button" aria-label="View {{ item.topic }}">
+              <div class="video-thumb-wrap">
+                <video src="{{ url_for('output', path=item.id ~ '.mp4') }}" preload="metadata" muted playsinline></video>
+                <div class="video-card-overlay">
+                  <span class="play-indicator">▶</span>
+                </div>
+              </div>
+              <div class="video-meta">
+                <h3 class="video-topic" title="{{ item.topic }}">{{ item.topic }}</h3>
+                <div class="video-sub">
+                  <span class="video-badge">{{ item.community }}</span>
+                  <span class="video-time">Ready</span>
+                </div>
+                <button type="button" class="btn-delete-video" data-video-id="{{ item.id }}" title="Delete video">
+                  Delete
+                </button>
+              </div>
+            </article>
+            {% endfor %}
+          {% else %}
+            <div class="empty-state" id="emptyVideos">
+              <div class="empty-icon">
+                <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/>
+                  <line x1="7" y1="2" x2="7" y2="22"/>
+                  <line x1="17" y1="2" x2="17" y2="22"/>
+                  <line x1="2" y1="12" x2="22" y2="12"/>
+                </svg>
+              </div>
+              <h3>No videos yet</h3>
+              <p>No videos yet. Generate your first one.</p>
+            </div>
+          {% endif %}
+        </div>
+      </section>
+
+      <!-- VIEW 4: Video Review -->
+      <section class="view" id="view-review">
+        <div class="view-header">
+          <span class="eyebrow">QUALITY ASSURANCE</span>
+          <h1>Video Review</h1>
+          <p class="view-sub">Review queue and pending approvals.</p>
+        </div>
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <h3>Nothing to review yet.</h3>
+          <p>Videos awaiting quality approval will be queued here.</p>
+        </div>
+      </section>
+
+      <!-- VIEW 5: Drafts -->
+      <section class="view" id="view-drafts">
+        <div class="view-header">
+          <span class="eyebrow">SCRIPTS &amp; OUTLINES</span>
+          <h1>Drafts</h1>
+          <p class="view-sub">Saved hooks, narrations, and uncompiled concepts.</p>
+        </div>
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+          </div>
+          <h3>No drafts yet.</h3>
+          <p>Saved script drafts and scene outlines will appear here.</p>
+        </div>
+      </section>
+
+      <!-- VIEW 6: Publishing History -->
+      <section class="view" id="view-history">
+        <div class="view-header">
+          <span class="eyebrow">DISTRIBUTION</span>
+          <h1>Publishing History</h1>
+          <p class="view-sub">Track uploads, post captions, and community distribution logs.</p>
+        </div>
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <h3>No published videos yet.</h3>
+          <p>Your history of Qoneqt social posts will be documented here.</p>
+        </div>
+      </section>
+
+      <!-- VIEW 7: Settings -->
+      <section class="view" id="view-settings">
+        <div class="view-header">
+          <span class="eyebrow">STUDIO CONFIGURATION</span>
+          <h1>Settings</h1>
+          <p class="view-sub">Preferences and engine configuration.</p>
+        </div>
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </div>
+          <h3>Settings coming soon.</h3>
+          <p>Audio engine, community presets, and Groq API management.</p>
+        </div>
+      </section>
+    </main>
+  </div>
 </div>
 
-<div class="modal" id="result-modal" aria-hidden="true"><div class="modal-card"><button class="modal-close" id="modal-close" type="button">×</button><h2>Your Qlip is ready</h2><video id="modal-video" controls autoplay playsinline></video><div id="modal-meta"></div><button class="secondary-button" type="button" id="modal-done">Close</button></div></div>
-<script src="{{ url_for('static', path='app.js') }}" defer></script>
+<!-- RESULT MODAL -->
+<div class="modal" id="resultModal" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2 class="modal-title">Your Qlip is ready</h2>
+      <button type="button" class="modal-close-icon" id="modalCloseIcon" aria-label="Close modal">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-video-wrap">
+      <video id="modalVideo" controls autoplay playsinline></video>
+    </div>
+
+    <div class="modal-meta-list">
+      <div class="meta-item">
+        <span class="meta-label">Hook 1</span>
+        <div class="meta-value" id="modalHook1">—</div>
+      </div>
+
+      <div class="meta-item">
+        <span class="meta-label">Hook 2</span>
+        <div class="meta-value" id="modalHook2">—</div>
+      </div>
+
+      <div class="meta-item">
+        <div class="meta-header-row">
+          <span class="meta-label">Caption</span>
+          <button type="button" class="copy-btn" id="copyCaptionBtn" data-target="modalCaption">Copy</button>
+        </div>
+        <div class="meta-value" id="modalCaption">—</div>
+      </div>
+
+      <div class="meta-item">
+        <div class="meta-header-row">
+          <span class="meta-label">Hashtags</span>
+          <button type="button" class="copy-btn" id="copyHashtagsBtn" data-target="modalHashtags">Copy</button>
+        </div>
+        <div class="meta-value" id="modalHashtags">—</div>
+      </div>
+    </div>
+
+    <button type="button" class="secondary-btn" id="modalCloseBtn">Close</button>
+  </div>
+</div>
+
+<script src="/static/app.js" defer></script>
 </body>
 </html>
