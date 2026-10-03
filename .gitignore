@@ -34,4 +34,5 @@ output/
 clips/
 
 # Logs
-*.log
+*.logclips-full/
+demo-clips/
