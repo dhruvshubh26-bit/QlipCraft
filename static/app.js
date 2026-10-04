@@ -1,5 +1,6 @@
 let selectedCommunity = document.querySelector('.community.active, .community-btn.active')?.dataset.community || 'Jobs';
 let selectedDuration = 30;
+let showCaptions = true;
 
 const topicInput = document.getElementById('topicInput');
 const topicError = document.getElementById('topicError');
@@ -14,6 +15,7 @@ const modalCaption = document.getElementById('modalCaption');
 const modalHashtags = document.getElementById('modalHashtags');
 const copyCaptionBtn = document.getElementById('copyCaptionBtn');
 const copyHashtagsBtn = document.getElementById('copyHashtagsBtn');
+const captionsInput = document.getElementById('captionsInput');
 
 let pipelineInterval = null;
 const stepCount = 6;
@@ -416,6 +418,7 @@ if (generateButton) {
       fd.append('topic', topic);
       fd.append('community', selectedCommunity);
       fd.append('duration', selectedDuration);
+      fd.append('captions', String(captionsInput ? captionsInput.checked : showCaptions));
 
       const response = await fetch('/generate', {
         method: 'POST',

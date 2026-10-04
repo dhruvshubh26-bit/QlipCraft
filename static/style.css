@@ -403,6 +403,53 @@ svg {
   margin-bottom: 10px;
 }
 
+.caption-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.caption-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.caption-option-box {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  border: 2px solid var(--muted);
+  border-radius: 5px;
+}
+
+.caption-option input:checked + .caption-option-box {
+  border-color: var(--primary);
+  background: var(--primary);
+  box-shadow: inset 0 0 0 4px var(--card);
+}
+
+.caption-option strong,
+.caption-option small {
+  display: block;
+}
+
+.caption-option strong {
+  font-size: 14px;
+}
+
+.caption-option small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
 .textarea,
 .topic-input,
 #topicInput {

@@ -53,6 +53,7 @@ async def generate(
     topic: str = Form(...),
     community: str = Form(...),
     duration: int = Form(30),
+    captions: bool = Form(True),
 ):
     try:
         brain = ContentBrain()
@@ -68,7 +69,12 @@ async def generate(
 
         job_id = uuid.uuid4().hex[:8]
         output_path = OUTPUT_DIR / f"{job_id}.mp4"
-        Composer().compose(clips, audio_path, str(output_path))
+        Composer().compose(
+            clips,
+            audio_path,
+            str(output_path),
+            caption_scenes=scenes if captions else None,
+        )
 
         RECENT.insert(
             0,

@@ -12,6 +12,10 @@ async def main():
     topic = input("Enter a topic: ").strip()
     print("Available communities:", ", ".join(COMMUNITY_PROFILES.keys()))
     community = input("Community: ").strip()
+    show_captions = input("Add captions to the video? [Y/n]: ").strip().lower() not in {
+        "n",
+        "no",
+    }
 
     if not topic:
         print("❌ Topic cannot be empty.")
@@ -50,7 +54,11 @@ async def main():
 
         # Compose final video
         composer = Composer()
-        final_path = composer.compose(video_paths, audio_path)
+        final_path = composer.compose(
+            video_paths,
+            audio_path,
+            caption_scenes=script_scenes if show_captions else None,
+        )
 
         print(f"\n✅ Final video saved: {final_path}")
         print("\n✅ QlipCraft finished successfully.")

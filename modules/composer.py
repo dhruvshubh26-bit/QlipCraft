@@ -1,5 +1,6 @@
 import os
 import subprocess
+import textwrap
 
 
 def _duration(path):
@@ -28,7 +29,49 @@ def _duration(path):
         return 0.0
 
 
-def _compose_video(video_paths, audio_path, output_path="assets/final/final_video.mp4"):
+def _srt_timestamp(seconds):
+    milliseconds = max(0, round(seconds * 1000))
+    hours, remainder = divmod(milliseconds, 3_600_000)
+    minutes, remainder = divmod(remainder, 60_000)
+    seconds, milliseconds = divmod(remainder, 1_000)
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d},{milliseconds:03d}"
+
+
+def _write_captions(caption_scenes, scene_duration, path):
+    cues = []
+    for index, scene in enumerate(caption_scenes):
+        if not isinstance(scene, dict):
+            continue
+        text = " ".join(str(scene.get("narration", "")).split())
+        if not text:
+            continue
+
+        start = index * scene_duration
+        end = (index + 1) * scene_duration
+        wrapped = "\n".join(textwrap.wrap(text, width=42, break_long_words=False))
+        cues.append(
+            f"{len(cues) + 1}\n"
+            f"{_srt_timestamp(start)} --> {_srt_timestamp(end)}\n"
+            f"{wrapped}\n"
+        )
+
+    if not cues:
+        raise ValueError("Caption scenes do not contain narration text.")
+
+    with open(path, "w", encoding="utf-8-sig") as captions_file:
+        captions_file.write("\n".join(cues))
+
+
+def _subtitle_filter_path(path):
+    return os.path.relpath(path).replace("\\", "/")
+
+
+def _compose_video(
+    video_paths,
+    audio_path,
+    output_path="assets/final/final_video.mp4",
+    caption_scenes=None,
+):
     if not video_paths:
         raise ValueError("At least one video clip is required.")
 
@@ -76,6 +119,9 @@ def _compose_video(video_paths, audio_path, output_path="assets/final/final_vide
     ], check=True)
 
     # Add audio (the important part)
+    audio_video = output_path
+    if caption_scenes:
+        audio_video = "assets/temp/with_audio.mp4"
     subprocess.run([
         "ffmpeg", "-y",
         "-i", silent,
@@ -84,8 +130,26 @@ def _compose_video(video_paths, audio_path, output_path="assets/final/final_vide
         "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-ac", "2",
         "-map", "0:v:0", "-map", "1:a:0",
         "-shortest",
-        output_path
+        audio_video
     ], check=True)
+
+    if caption_scenes:
+        captions_path = "assets/temp/captions.srt"
+        _write_captions(caption_scenes, per_clip, captions_path)
+        subprocess.run([
+            "ffmpeg", "-y",
+            "-i", audio_video,
+            "-vf",
+            (
+                f"subtitles={_subtitle_filter_path(captions_path)}:"
+                "force_style='FontName=Arial,FontSize=28,Bold=1,"
+                "PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,"
+                "BorderStyle=1,Outline=3,Shadow=0,Alignment=2,MarginV=360'"
+            ),
+            "-c:v", "libx264", "-preset", "ultrafast", "-pix_fmt", "yuv420p",
+            "-c:a", "copy",
+            output_path,
+        ], check=True)
 
     # Verify output has audio
     check = subprocess.run(
@@ -113,5 +177,11 @@ def _compose_video(video_paths, audio_path, output_path="assets/final/final_vide
 
 
 class Composer:
-    def compose(self, video_paths, audio_path, output_path="assets/final/final_video.mp4"):
-        return _compose_video(video_paths, audio_path, output_path)
+    def compose(
+        self,
+        video_paths,
+        audio_path,
+        output_path="assets/final/final_video.mp4",
+        caption_scenes=None,
+    ):
+        return _compose_video(video_paths, audio_path, output_path, caption_scenes)
