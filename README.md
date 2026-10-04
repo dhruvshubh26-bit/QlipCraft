@@ -330,3 +330,7 @@ Gandhinagar University
 - Edge TTS for narration synthesis
 - FFmpeg for video processing and final audio/video composition
 
+[![Architecture diagram of dhruvshubh26-bit/qlipcraft](https://gitdiagram.com/dhruvshubh26-bit/qlipcraft/diagram.png)](https://gitdiagram.com/dhruvshubh26-bit/qlipcraft?utm_source=readme&utm_medium=picture)
+
+[![Architecture diagram](https://gitdiagram.com/diagram-badge.svg)](https://gitdiagram.com/dhruvshubh26-bit/qlipcraft?utm_source=readme&utm_medium=badge)
+
